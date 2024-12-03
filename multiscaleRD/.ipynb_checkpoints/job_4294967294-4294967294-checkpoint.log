@@ -1,0 +1,15 @@
+Di 3. Dez 17:56:18 CET 2024
+htc-cmp008.zib.de
+/home/htc/bzfkostr/multiscaleRD/multiscaleRD
+0
+Traceback (most recent call last):
+  File "/home/htc/bzfkostr/multiscaleRD/multiscaleRD/Discretization_SIRExplicit.py", line 126, in <module>
+    DiscreteSusAverage, DiscreteInfAverage, DiscreteRecAverage=functionAverage()
+                                                               ^^^^^^^^^^^^^^^^^
+  File "/home/htc/bzfkostr/multiscaleRD/multiscaleRD/Discretization_SIRExplicit.py", line 88, in functionAverage
+    Sus_s_t=np.load('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/'+str('SIRSusExplicit_B')+str(s)+ 'time'
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/numpy/lib/npyio.py", line 405, in load
+    fid = stack.enter_context(open(os_fspath(file), "rb"))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/SIRSusExplicit_B0time0.npy'
