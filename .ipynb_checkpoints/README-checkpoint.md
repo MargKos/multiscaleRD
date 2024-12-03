@@ -62,9 +62,9 @@ This example shows two videos for the SIR dynamics of the concentration of 1) su
 
 <img src="Videos/ReferenceSus_video_B.gif" width="400"> <img src="Videos/HybridSus_video_TauB.gif" width="400" />
 
-<img src="Videos/ReferencInf_video_B.gif" width="400"> <img src="Videos/HybridInf_video_TauB.gif" width="400" />
+<img src="Videos/ReferenceInf_video_B.gif" width="400"> <img src="Videos/HybridInf_video_TauB.gif" width="400" />
 
-<img src="Videos/ReferenceRec_video_B.gif" width="400"> <img src="Videos/HybridRec_video_TauB.gif" width="400" />
+<img src="Videos/ReferenceRec_video_B.gif" width="400"><img src="Videos/HybridRec_video_TauB.gif" width="400" />
 
 ## License
 
