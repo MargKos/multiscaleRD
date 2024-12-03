@@ -60,11 +60,11 @@ This example shows two videos for the reaction-diffusion dynamics of the concent
 
 This example shows two videos for the SIR dynamics of the concentration of 1) susceptible 2) infected and 3) recovered species in the system for setting B. The left video shows the reference simulation obtained with a finite-difference scheme. The right video shows the results of the hybrid simulation with the tau-leaping scheme. Here, the left half corresponds to the average concentration over several particle-based simulations using our scheme, and the right half corresponds to the PDE-mediated reservoir.
 
-<img src="Videos/ReferenceSus_video_B.gif" width="400"> <img src="Videos/HybridSus_video_B.gif" width="400" />
+<img src="Videos/ReferenceSus_video_B.gif" width="400"> <img src="Videos/HybridSus_video_TauB.gif" width="400" />
 
-<img src="Videos/ReferencInf_video_B.gif" width="400"> <img src="Videos/HybridInf_video_B.gif" width="400" />
+<img src="Videos/ReferencInf_video_B.gif" width="400"> <img src="Videos/HybridInf_video_TauB.gif" width="400" />
 
-<img src="Videos/ReferenceRec_video_B.gif" width="400"> <img src="Videos/HybridRec_video_B.gif" width="400" />
+<img src="Videos/ReferenceRec_video_B.gif" width="400"> <img src="Videos/HybridRec_video_TauB.gif" width="400" />
 
 ## License
 
