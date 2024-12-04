@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=JSDLV2                       # Job name
+#SBATCH --job-name=JSDLV                       # Job name
 #SBATCH --partition=small                       # Partition name
 #SBATCH --mail-type=END                         # Mail events (NONE, BEGIN, END, FAIL, ALL)
 #SBATCH --mail-user=kostre@zib.de               # Where to send mail
@@ -17,7 +17,7 @@ pwd
 cd /home/htc/bzfkostr/multiscaleRD/multiscaleRD
 
 # Run the Python script
-python3 JSD_Run_LV2.py
+python3 JSD_Run_LV.py
 
 
 

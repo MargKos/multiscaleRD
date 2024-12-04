@@ -1,18 +1,18 @@
 from __future__ import division
 import numpy as np
-from ParametersB_SIR import *
+from Parameters_LV import *
+import numpy as np
 from scipy.stats import entropy
 
-# Preload reference data into memory
-ReferenceSus = np.load('./Solutions/FDSIR1_B.npy')
-ReferenceInf = np.load('./Solutions/FDSIR2_B.npy')
-ReferenceRec = np.load('./Solutions/FDSIR3_B.npy')
+
+ReferencePrey = np.load('./Solutions/FDLVSolution1.npy')  # gets Data from continuous solution of A
+ReferencePred  = np.load('./Solutions/FDLVSolution2.npy')  # gets Data from continuous solution of B
 
 # Parameters
 ts = 0.1
 constant = int(ts / deltat)
 sim_values = [1,10,25,50, 100, 150, 200, 250, 300, 350, 400, 450, 500]
-Times = [5, 8]
+Times = [10, 24]
 batches = 50
 xbins = np.arange(0, a + h, h)
 ybins = np.arange(0, a + h, h)
@@ -92,26 +92,18 @@ def JSD(P, Q):
 
 # Preload all particle data into memory
 all_sus_files = [
-    np.load(f'/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/SIRSusTauB{s}time{time}.npy', allow_pickle=True)
+    np.load(f'/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/LVPreyParticles{s}time{time}.npy', allow_pickle=True)
     for s in range(500)
     for time in Times
 ]
 all_inf_files = [
-    np.load(f'/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/SIRInfTauB{s}time{time}.npy', allow_pickle=True)
+    np.load(f'/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/LVPredatorParticles{s}time{time}.npy', allow_pickle=True)
     for s in range(500)
     for time in Times
-]
-all_rec_files = [
-    np.load(f'/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/SIRRecoveryTauB{s}time{time}.npy', allow_pickle=True)
-    for s in range(500)
-    for time in Times
-]
-
-            
+]        
 # Results arrays
-SusJSDSimulations = np.zeros((len(sim_values), len(Times)))
-InfJSDSimulations = np.zeros((len(sim_values), len(Times)))
-RecJSDSimulations = np.zeros((len(sim_values), len(Times)))
+PreyJSDSimulations = np.zeros((len(sim_values), len(Times)))
+PredJSDSimulations = np.zeros((len(sim_values), len(Times)))
 
 # Main loop over fixed `s` values
 for s_idx, s in enumerate(sim_values):
@@ -144,7 +136,8 @@ for s_idx, s in enumerate(sim_values):
         InfJSDSimulations[s_idx, t_idx] = batch_jsd_inf / batches
         RecJSDSimulations[s_idx, t_idx] = batch_jsd_rec / batches
 
-# Save results
-np.save('./Solutions/JSDSusTauB.npy', SusJSDSimulations)
-np.save('./Solutions/JSDRecTauB.npy', RecJSDSimulations)
-np.save('./Solutions/JSDInfTauB.npy', InfJSDSimulations)
+#%%
+np.save('./Solutions/LVPreyJSDPaper.npy', PreyJSDSimulations)
+np.save('./Solutions/LVPredJSDPaper.npy', PredJSDSimulations)
+        
+

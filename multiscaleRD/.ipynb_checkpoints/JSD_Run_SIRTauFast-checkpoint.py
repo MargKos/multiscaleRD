@@ -107,6 +107,7 @@ all_rec_files = [
     for time in Times
 ]
 
+            
 # Results arrays
 SusJSDSimulations = np.zeros((len(sim_values), len(Times)))
 InfJSDSimulations = np.zeros((len(sim_values), len(Times)))
@@ -121,7 +122,7 @@ for s_idx, s in enumerate(sim_values):
 
         for _ in range(batches):
             # Randomly sample `s` simulations
-            SimulationIndices = np.random.choice(range(700), size=s, replace=False)
+            SimulationIndices = np.random.choice(range(500), size=s, replace=False)
 
             # Compute average for the sampled simulations
             DiscreteSusAverage, DiscreteInfAverage, DiscreteRecAverage = functionAverage(

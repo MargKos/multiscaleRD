@@ -1,4 +1,4 @@
-<#!/bin/bash
+#!/bin/bash
 #SBATCH --job-name=JSDSIRTau                        # Job name
 #SBATCH --partition=small                       # Partition name
 #SBATCH --mail-type=END                         # Mail events (NONE, BEGIN, END, FAIL, ALL)
