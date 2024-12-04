@@ -9,12 +9,12 @@ from __future__ import division
 import numpy as np
 import matplotlib
 matplotlib.use("agg")
-from Reaction_LV2 import *
+from Reaction_LV import *
 from Injection_LV import *
-from Parameters_LV2 import *
+from Parameters_LV import *
 import sys
 
-# code for the first paper (https://arxiv.org/abs/2006.00003)
+#code for LV parameters (not published)
 
 # multiprocessing
 
@@ -46,8 +46,6 @@ The code consists of the following components
 1) Calculate the boundary concentration for EACH timestep
 2) Iteration with Strang Splitting using the function from Reaction.py and Injection.py: Injection, Reaction, Diffusion, Reaction, Injection.
 3) Multiprocessing that does many simulations at same time
-
-In this code prey and predators can have different velocities
 '''
 
 # Calculate the boundary concentration 'Boundaryconcentration' from the FD solution
@@ -57,10 +55,15 @@ dx_hist = a / l_coupling  # length of histogram cell edge (squares of dx_hist by
 yarray1 = np.arange(0, a, deltar1)  # Array to locate boundary cells for species A
 yarray2 = np.arange(0, a, deltar2)  # Array to locate boundary cells for species B
 
-# load FD solution
+# Simulation parameters
+dtshould1 = deltar1 * deltar1 / (2.0 * D1)  # time-step size
+dtshould2 = deltar2 * deltar2 / (2.0 * D2)  # time-step size
+print(dtshould1, dtshould2, deltat, 'Should be equal')
 
-listC1 = np.load('./Solutions/PaperFDLVSolution1.npy')  # gets Data from continuous solution of A
-listC2 = np.load('./Solutions/PaperFDLVSolution2.npy')  # gets Data from continuous solution of B
+#Time = np.linspace(0, maxtime, timesteps)
+
+listC1 = np.load('./Solutions/FDLVSolution1.npy')  # gets Data from continuous solution of A
+listC2 = np.load('./Solutions/FDLVSolution2.npy')  # gets Data from continuous solution of B
 
 averageNumberParticles1 = np.zeros((len(yarray1), timesteps))
 averageNumberParticles2 = np.zeros((len(yarray2), timesteps))
@@ -145,7 +148,7 @@ def functionsimulation(ts):
         # Reaction
         PreyChildrenProlif1, NotProliferatedPreys = proliferation(PreyPosition, r1, deltat * 0.25)
         PredatorPosition = dying(PredatorPosition, r3, deltat * 0.25, PredatorPosition)
-        PreyPositionAfterReaction, PredChildrenReact, PredB = eatcompact(NotProliferatedPreys, PredatorPosition, L, deltar1, deltar2,
+        PreyPositionAfterReaction, PredChildrenReact, PredB = eatcompact(NotProliferatedPreys, PredatorPosition, L, deltar1,deltar2,
                                                             Boundaryconcentration1[:, t],
                                                             Boundaryconcentration2[:, t], r2, sigma, deltat*0.5, L)
         
@@ -172,8 +175,8 @@ def functionsimulation(ts):
             PreyPositionHalfTime[k] = np.array(PreyPosition)
             PredatorPositionHalfTime[k] = np.array(PredatorPosition)
             
-            np.save(f'/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/PaperLVPreyParticles{start}time{k}', PreyPositionHalfTime[k])
-            np.save(f'/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/PaperLVPredatorParticles{start}time{k}', PredatorPositionHalfTime[k])
+            np.save(f'/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/LVPreyParticles{start}time{k}', PreyPositionHalfTime[k])
+            np.save(f'/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/LVPredatorParticles{start}time{k}', PredatorPositionHalfTime[k])
             
             k += 1
             print((t)*deltat, timesteps/timesteps_cut)

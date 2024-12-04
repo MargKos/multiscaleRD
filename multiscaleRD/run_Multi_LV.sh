@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=MultiLV2                        # Job name
+#SBATCH --job-name=MultiLV                         # Job name
 #SBATCH --partition=small                      # Partition name
 #SBATCH --array=1-500                            
 #SBATCH --mail-type=END                         # Mail events (NONE, BEGIN, END, FAIL, ALL)
@@ -12,7 +12,7 @@
 date;hostname;pwd
 
 cd /home/htc/bzfkostr/multiscaleRD/multiscaleRD
-python3 Coupling_LV2.py $SLURM_ARRAY_TASK_ID
+python3 Coupling_LV.py $SLURM_ARRAY_TASK_ID
 
 
 
