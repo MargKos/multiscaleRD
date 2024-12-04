@@ -49,6 +49,8 @@ The second and third example are using Reaction_LV and Injection_LV functions, w
 ## Sample Solutions
 
 - LV
+
+  
 This example shows two videos for the reaction-diffusion dynamics of the concentration of prey in the Lotka-Volterra system (predator-prey). The left video shows the reference simulation obtained with a finite-difference scheme. The right video shows the results of the hybrid simulation. Here, the left half corresponds to the average concentration over several particle-based simulations using our scheme, and the right half corresponds to the PDE-mediated reservoir.
 
 <img src="Videos/ReferencePrey_video.gif" width="400"> <img src="Videos/HybridPrey_video.gif" width="400" />
