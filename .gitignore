@@ -1,0 +1,14 @@
+# Ignore .npy files
+*.npy
+
+# Ignore cache files and folders
+*.cache
+cache/
+
+# Ignore log files
+*.log
+logs/
+
+# Ignore a specific folder (replace 'folder_name' with your folder's name)
+multiscaleRD/Old
+
