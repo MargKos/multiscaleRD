@@ -50,7 +50,7 @@ def Discretization(Particles):
     return concentration
 
 
-def functionAverage(Indices, time, all_sus, all_inf, all_rec):
+def functionAverage(Indices, time, all_sus, all_inf):
     """
     Returns the mean-field concentration for each time-step by averaging over all
     simulations
@@ -58,20 +58,18 @@ def functionAverage(Indices, time, all_sus, all_inf, all_rec):
     num_bins = int(a / h)
     DiscreteSus = np.empty([len(Indices), num_bins, num_bins])
     DiscreteInf = np.empty([len(Indices), num_bins, num_bins])
-    DiscreteRec = np.empty([len(Indices), num_bins, num_bins])
+   
 
     for k, idx in enumerate(Indices):
         # Get preloaded particle data
         discrete_sus = Discretization(all_sus[idx])
         discrete_inf = Discretization(all_inf[idx])
-        discrete_rec = Discretization(all_rec[idx])
-
+        
         DiscreteSus[k, :, :] = discrete_sus
         DiscreteInf[k, :, :] = discrete_inf
-        DiscreteRec[k, :, :] = discrete_rec
-
+        
     # Return averages over all selected simulations
-    return DiscreteSus.mean(axis=0), DiscreteInf.mean(axis=0), DiscreteRec.mean(axis=0)
+    return DiscreteSus.mean(axis=0), DiscreteInf.mean(axis=0)
 
 
 def JSD(P, Q):
@@ -91,12 +89,12 @@ def JSD(P, Q):
 
 
 # Preload all particle data into memory
-all_sus_files = [
+all_prey_files = [
     np.load(f'/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/LVPreyParticles{s}time{time}.npy', allow_pickle=True)
     for s in range(500)
     for time in Times
 ]
-all_inf_files = [
+all_pred_files = [
     np.load(f'/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/LVPredatorParticles{s}time{time}.npy', allow_pickle=True)
     for s in range(500)
     for time in Times
@@ -110,31 +108,28 @@ for s_idx, s in enumerate(sim_values):
     for t_idx, time in enumerate(Times):
         batch_jsd_sus = 0
         batch_jsd_inf = 0
-        batch_jsd_rec = 0
 
         for _ in range(batches):
             # Randomly sample `s` simulations
             SimulationIndices = np.random.choice(range(500), size=s, replace=False)
 
             # Compute average for the sampled simulations
-            DiscreteSusAverage, DiscreteInfAverage, DiscreteRecAverage = functionAverage(
-                SimulationIndices, time, all_sus_files, all_inf_files, all_rec_files
+            DiscreteSusAverage, DiscreteInfAveragee = functionAverage(
+                SimulationIndices, time, all_prey_files, all_pred_files
             )
 
             # Hybrid plots
             HybridSus = HybridPlot(DiscreteSusAverage, ReferenceSus[int(constant * (time + 1))], l_coupling)
             HybridInf = HybridPlot(DiscreteInfAverage, ReferenceInf[int(constant * (time + 1))], l_coupling)
-            HybridRec = HybridPlot(DiscreteRecAverage, ReferenceRec[int(constant * (time + 1))], l_coupling)
-
+           
             # Calculate JSD for each
             batch_jsd_sus += JSD(HybridSus, ReferenceSus[int(constant * (time + 1))])
             batch_jsd_inf += JSD(HybridInf, ReferenceInf[int(constant * (time + 1))])
-            batch_jsd_rec += JSD(HybridRec, ReferenceRec[int(constant * (time + 1))])
+           
 
         # Average over batches
         SusJSDSimulations[s_idx, t_idx] = batch_jsd_sus / batches
         InfJSDSimulations[s_idx, t_idx] = batch_jsd_inf / batches
-        RecJSDSimulations[s_idx, t_idx] = batch_jsd_rec / batches
 
 #%%
 np.save('./Solutions/LVPreyJSDPaper.npy', PreyJSDSimulations)
