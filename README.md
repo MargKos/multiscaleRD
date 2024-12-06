@@ -1,7 +1,16 @@
 # MultiscaleRD
 
-This repository contains code to accompany the paper *"Coupling particle-based reaction-diffusion simulations with reservoirs mediated by reaction-diffusion PDEs"* by M. Kostré, C. Schütte, F. Noé, and M. J. del Razo.  
-[[arXiv]](https://arxiv.org/pdf/2006.00003.pdf)
+This repository contains the code accompanying the paper:
+"Open Reaction-Diffusion Systems: Bridging Probabilistic Theory and Simulation Across Scales"
+by M. J. del Razo and M. Kostré (DOI: 10.48550/arXiv.2404.07119).
+
+The implementation builds on algorithms from our previous work:
+"Coupling Particle-Based Reaction-Diffusion Simulations with Reservoirs Mediated by Reaction-Diffusion PDEs"
+by M. Kostré, C. Schütte, F. Noé, and M. J. del Razo (arXiv:2006.00003).
+
+All algorithms from both papers are implemented in this repository. The 2024 algorithms offer significant efficiency improvements, and we have included new examples to demonstrate their validity.
+
+## Overview
 
 In this code, we implement a hybrid scheme that couples particle-based reaction-diffusion simulations with spatially and time-dependent reservoirs mediated by reaction-diffusion PDEs. It solves the reaction-diffusion PDE using a finite difference scheme with a Crank-Nicolson integrator, and implements particle-based reaction-diffusion simulations based on the Doi model, similar to how it is done in [ReaDDy2](https://readdy.github.io/).  
 The hybrid scheme consistently couples the particle-based simulation to the PDE-mediated reservoir. We verify the scheme using **three examples**:
@@ -25,10 +34,10 @@ The hybrid scheme consistently couples the particle-based simulation to the PDE-
    `git clone https://github.com/MargKos/multiscaleRD.git`
 2. (Optional) Modify the default mathematical and numerical parameters for the finite difference scheme and particle-based simulation in `multiscaleRD/Parameters_(example).py`.
 3. Solve the reaction-diffusion PDE for each example by running the finite difference code (`multiscaleRD/FD_(example).py`). This will generate the reference solution(s) and reservoir.
-4. Run multiple particle-based simulations by executing `multiscaleRD/Coupling_(example).py`, preferably across multiple computers. For each time-step, store the locations of particles from each simulation.
+4. Run multiple particle-based simulations by executing `multiscaleRD/Coupling_(example).py`, preferably across multiple computers. For each time-step, store the locations of particles from each simulation. (we recommend to store the names on the text file 'Protokol')
 5. Use `multiscaleRD/Discretization_(example).py` to calculate the average over the particle-based simulations.
 6. Run `multiscaleRD/Plot_(example).py` to plot the concentration.
-7. Use `multiscaleRD/CompareMean_(example).py` to compare the number of particles across the particle-based domain.
+7. Use `multiscaleRD/CompareMean_(example).py` to compare the number of particles across the particle-based domain and to compare the computational time.
 8. To calculate the Jensen-Shannon Divergence (JSD), run `multiscaleRD/JSD_Run_(example).py` and plot it using `multiscaleRD/JSD_Plot_(example).py`.
 
 ## Folder Organization
@@ -38,10 +47,12 @@ The hybrid scheme consistently couples the particle-based simulation to the PDE-
 - `multiscaleRD/Coupling_(example).py`: Contains the hybrid algorithm.
 - `multiscaleRD/Injection.py` and `multiscaleRD/Reaction.py`: Contain functions for the injection and reaction procedures used in `multiscaleRD/Coupling_(example).py`:
   - `multiscaleRD/Reaction_(example).py` implements particle-based reaction-diffusion simulations (up to second-order reactions), such as proliferation (A → 2A), degradation (A → 0), and diffusion of particles modeled by the Euler-Maruyama scheme for a) LV and proliferation examples b) SIR example. These functions return, for example, lists of newly created particle positions.
-- The folder `multiscaleRD/Simulations`: Contains all the particle trajectories resulting from the hybrid scheme simulations (`multiscaleRD/Coupling_(example).py`).
+- The folder `./Simulations`, which is located in SCRRATCH folder: Contains all the particle trajectories resulting from the hybrid scheme simulations (`multiscaleRD/Coupling_(example).py`).
 The second and third example are using Reaction_LV and Injection_LV functions, where SIR uses Reaction_SIR and Injection_SIR functions
 - The folder `multiscaleRD/Solutions`: Contains solutions of the reaction-diffusion PDE and the average over particle-based simulations from `multiscaleRD/Simulations`. These files are used for plotting or analysis in `multiscaleRD/Plot_(example).py`.
-
+- The folder `multiscaleRD/Plots` contains plots, i.e. results
+- The folder `multiscaleRD/Videos` contains video, which are generated with `Video_(examnple).py`
+  
 ## Notes on Code Notation
 
 - The reference solutions of the preys/susceptible species are denoted by "1", the solutions of the predators/infected by "2", and the recovered by "3".
