@@ -1,14 +1,15 @@
 # MultiscaleRD
 
-This repository contains the code accompanying the paper:
-"Open Reaction-Diffusion Systems: Bridging Probabilistic Theory and Simulation Across Scales"
-by M. J. del Razo and M. Kostré (DOI: 10.48550/arXiv.2404.07119).
+This repository contains the code accompanying the paper:  
+**[Open Reaction-Diffusion Systems: Bridging Probabilistic Theory and Simulation Across Scales](https://arxiv.org/abs/2404.07119)**  
+by M. J. del Razo and M. Kostré (DOI: [10.48550/arXiv.2404.07119](https://arxiv.org/abs/2404.07119)).
 
-The implementation builds on algorithms from our previous work:
-"Coupling Particle-Based Reaction-Diffusion Simulations with Reservoirs Mediated by Reaction-Diffusion PDEs"
-by M. Kostré, C. Schütte, F. Noé, and M. J. del Razo (arXiv:2006.00003).
+The implementation builds on algorithms from our previous work:  
+**[Coupling Particle-Based Reaction-Diffusion Simulations with Reservoirs Mediated by Reaction-Diffusion PDEs](https://epubs.siam.org/doi/10.1137/20M1352739)**  
+by M. Kostré, C. Schütte, F. Noé, and M. J. del Razo (arXiv: [2006.00003](https://arxiv.org/abs/2006.00003)).
 
 All algorithms from both papers are implemented in this repository. The 2024 algorithms offer significant efficiency improvements, and we have included new examples to demonstrate their validity.
+
 
 ## Overview
 
