@@ -1,25 +1,55 @@
 # MultiscaleRD
 
 This repository contains the code accompanying the paper:  
-**[Open Reaction-Diffusion Systems: Bridging Probabilistic Theory and Simulation Across Scales](https://arxiv.org/abs/2404.07119)**  
-by M. J. del Razo and M. Kostré (DOI: [10.48550/arXiv.2404.07119](https://arxiv.org/abs/2404.07119)).
+**[[1] Open Reaction-Diffusion Systems: Bridging Probabilistic Theory and Simulation Across Scales](https://arxiv.org/abs/2404.07119)**  
+(submitted) by M. J. del Razo and M. Kostré ([arXiv](https://arxiv.org/abs/2404.07119)).
 
 The implementation builds on algorithms from our previous work:  
-**[Coupling Particle-Based Reaction-Diffusion Simulations with Reservoirs Mediated by Reaction-Diffusion PDEs](https://epubs.siam.org/doi/10.1137/20M1352739)**  
-by M. Kostré, C. Schütte, F. Noé, and M. J. del Razo (arXiv: [2006.00003](https://arxiv.org/abs/2006.00003)).
+**[[2] Coupling Particle-Based Reaction-Diffusion Simulations with Reservoirs Mediated by Reaction-Diffusion PDEs](https://epubs.siam.org/doi/10.1137/20M1352739)**  
+SIAM Multiscale Modeling and Simulation 19(4), 1659–1683, by M. Kostré, C. Schütte, F. Noé, and M. J. del Razo ([arXiv](https://arxiv.org/abs/2006.00003)).
 
-All algorithms from both papers are implemented in this repository. The 2024 algorithms offer significant efficiency improvements, and we have included new examples to demonstrate their validity.
+All algorithms from both papers are implemented in this repository. The algorithms from [1] offer significant efficiency improvements over those originally presented in [2], and we have included new examples to demonstrate their validity.
 
 
 ## Overview
 
-In this code, we implement a hybrid scheme that couples particle-based reaction-diffusion simulations with spatially and time-dependent reservoirs mediated by reaction-diffusion PDEs. It solves the reaction-diffusion PDE using a finite difference scheme with a Crank-Nicolson integrator, and implements particle-based reaction-diffusion simulations based on the Doi model, similar to how it is done in [ReaDDy2](https://readdy.github.io/).  
+In this code, we implement hybrid schemes that couples particle-based reaction-diffusion simulations with spatially and time-dependent reservoirs mediated by reaction-diffusion PDEs. It solves the reaction-diffusion PDE using a finite difference scheme with a Crank-Nicolson integrator, and implements particle-based reaction-diffusion simulations based on the Doi model, similar to how it is done in [ReaDDy2](https://readdy.github.io/).  
 The hybrid scheme consistently couples the particle-based simulation to the PDE-mediated reservoir. We verify the scheme using **three examples**:
 
 1. **Diffusion process in 1D**: .
 2. **Diffusion process with a proliferation reaction**: This can be generalized to systems with zeroth- and/or first-order reactions.  (`multiscaleRD/FD_Proliferation.py` and `multiscaleRD/Coupling_Proliferation.py`)
 3. **Lotka-Volterra (predator-prey) reaction-diffusion process**: This can be generalized to systems with up to second-order reactions. (`multiscaleRD/FD_LV.py` and `multiscaleRD/Coupling_LV.py`)
 4. **SIR (susceptible, infected, recovered) reaction-diffusion process**: This can be generalized to systems with up to second-order reactions. (`multiscaleRD/FD_SIR.py` and `multiscaleRD/Coupling_SIR.py`)
+
+## Sample Solutions
+
+### Lotka-Volterra (LV)
+
+We show videos of the solution of a two-dimensional Lotka-Volterra (predator-prey) reaction-diffusion system. The videos on the left show the reference simulation obtained with a finite-difference scheme. The videos on the right show the results of the hybrid simulation using the explicit coupling schemes first presented in [2], where the left half of the domain corresponds to the average concentration over several particle-based simulations, and the right half corresponds to the concentration modeled by the PDE-mediated reservoir.
+
+**Prey concentration**
+
+<img src="Videos/ReferencePrey_video.gif" width="400"> <img src="Videos/HybridPrey_video.gif" width="400" />
+
+**Predator concentration**
+
+<img src="Videos/ReferencePred_video.gif" width="400"> <img src="Videos/HybridPred_video.gif" width="400" />
+
+### The spatial SIR model
+
+We show videos of the solution of a simulation of SIR (susceptible, infected and recovered) dynamics with spatial resolution. The videos on the left show the reference simulation obtained with a finite-difference scheme. The videos on the right shows the results of the hybrid simulation using the new and more efficient coupling schemes from [1], where the left half of the domain corresponds to the average concentration over several particle-based simulations, and the right half corresponds to the concentration modeled by the PDE-mediated reservoir.
+
+**Susceptible agents concentration**
+
+<img src="Videos/ReferenceSus_video_B.gif" width="400"> <img src="Videos/HybridSus_video_TauB.gif" width="400" />
+
+**Infected agents concentration**
+
+<img src="Videos/ReferenceInf_video_B.gif" width="400"> <img src="Videos/HybridInf_video_TauB.gif" width="400" />
+
+**Recovered agents concentration**
+
+<img src="Videos/ReferenceRec_video_B.gif" width="400"><img src="Videos/HybridRec_video_TauB.gif" width="400" />
 
 ## Requirements
 
@@ -57,28 +87,6 @@ The second and third example are using Reaction_LV and Injection_LV functions, w
 ## Notes on Code Notation
 
 - The reference solutions of the preys/susceptible species are denoted by "1", the solutions of the predators/infected by "2", and the recovered by "3".
-
-## Sample Solutions
-
-- LV
-
-  
-This example shows two videos for the reaction-diffusion dynamics of the concentration of prey in the Lotka-Volterra system (predator-prey). The left video shows the reference simulation obtained with a finite-difference scheme. The right video shows the results of the hybrid simulation. Here, the left half corresponds to the average concentration over several particle-based simulations using our scheme, and the right half corresponds to the PDE-mediated reservoir.
-
-<img src="Videos/ReferencePrey_video.gif" width="400"> <img src="Videos/HybridPrey_video.gif" width="400" />
-
-<img src="Videos/ReferencePred_video.gif" width="400"> <img src="Videos/HybridPred_video.gif" width="400" />
-
-- SIR
-
-
-This example shows two videos for the SIR dynamics of the concentration of 1) susceptible 2) infected and 3) recovered species in the system for setting B. The left video shows the reference simulation obtained with a finite-difference scheme. The right video shows the results of the hybrid simulation with the tau-leaping scheme. Here, the left half corresponds to the average concentration over several particle-based simulations using our scheme, and the right half corresponds to the PDE-mediated reservoir.
-
-<img src="Videos/ReferenceSus_video_B.gif" width="400"> <img src="Videos/HybridSus_video_TauB.gif" width="400" />
-
-<img src="Videos/ReferenceInf_video_B.gif" width="400"> <img src="Videos/HybridInf_video_TauB.gif" width="400" />
-
-<img src="Videos/ReferenceRec_video_B.gif" width="400"><img src="Videos/HybridRec_video_TauB.gif" width="400" />
 
 ## License
 
