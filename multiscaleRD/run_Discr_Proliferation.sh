@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=DiscrProlExplicit                         # Job name
+#SBATCH --job-name=DiscrProlif                        # Job name
 #SBATCH --partition=small                      # Partition name                          
 #SBATCH --mail-type=END                         # Mail events (NONE, BEGIN, END, FAIL, ALL)
 #SBATCH --mail-user=kostre@zib.de              # Where to send mail
@@ -11,7 +11,7 @@
 date;hostname;pwd
 
 cd /home/htc/bzfkostr/multiscaleRD/multiscaleRD
-python3 Discretization_Proliferation.py
+python3 Discretization_ProliferationExplicit.py
 
 
 date

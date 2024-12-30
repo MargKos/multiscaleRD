@@ -41,6 +41,7 @@ def movement(Particles,  deltat, D, Lx, Ly):
 
 
 
+
 def proliferation(Particles, rate, deltat):
     
     ''' 
