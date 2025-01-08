@@ -8,9 +8,9 @@ Created on Thu May 28 15:46:15 2020
 
 import numpy as np
 
-c=150000
+c=250000
 def u_0(x):
-	if 5<=x[0]<=5.5 :
+	if 5<x[0]<=5.5 :
 		ux=c*(2*abs(np.sin(2*np.pi*x[1]/10)))
 	else:
 		ux=0
@@ -45,12 +45,13 @@ s=which timestep we want to save
 
 l=100+1 # number of grids in x direction, should fit to a s.t. a/(l-1) is a 'good' number
 m=l # number of grids in y direction
-deltat=0.005 
-timesteps=300+1 
-D=0.8 # diffusion coefficient
+
+deltat=0.002
+timesteps=500+1 
+
+D=3
 a=10 #domain boundary
-#r1=0.2
-r1=0
+
   
 
 ''' Parameters only for Coupling'''
@@ -59,3 +60,4 @@ deltar=np.sqrt(deltat*D*2) # boundary size
 l_coupling=l-1 
 h=0.1
 #sim_number=500
+

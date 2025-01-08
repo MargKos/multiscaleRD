@@ -4,6 +4,7 @@ from matplotlib.colors import ListedColormap, LinearSegmentedColormap
 
 
 'B Mauricio Parameters Number 2 (not in the paper)'
+
 def function1(x):
 	if 5.1<=x[0]<=6.1 and 1.5<=x[1]<=2.5:
 		ux=1200 

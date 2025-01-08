@@ -27,7 +27,7 @@ timesteps_cut = int(deltat * (timesteps-1) / ts)
 dx_hist=a/l_coupling
 
 
-sim=500
+sim=100
 
 dx_hist=a/l_coupling
 
@@ -88,8 +88,6 @@ def functionAverage():
             DiscretePrey[s,t,:,:]=discrete_Prey_s_t
 
            
-
-    
     # average over simulations 
     for t in range(timesteps_cut):
         

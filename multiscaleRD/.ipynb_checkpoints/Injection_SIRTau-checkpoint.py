@@ -11,6 +11,9 @@ The functions will be used in the Strang splitting in the main file (Reaction+In
 
 
 import numpy as np
+
+# tau leaping injection
+
 def concentrationmovement_tauleaping(Boundaryconcentration_t, tau, deltar, L, gamma, M): 
     '''
     Returns a list of positions (2D arrays) of the new particles in the PBS domain (Children). 
@@ -29,23 +32,23 @@ def concentrationmovement_tauleaping(Boundaryconcentration_t, tau, deltar, L, ga
     '''
     
     Children = []
+    delta_tau = tau / M  # Time step for each sub-step in tau-leaping
     
     # Loop over all boundary cells
     for i in range(len(Boundaryconcentration_t)):    
         
         particles_in_cell = Boundaryconcentration_t[i]  # Number of particles in cell i
         injected_particles = 0  # Number of injected particles initially 0
-        delta_tau = tau / M  # Time step for each sub-step in tau-leaping
-    
+       
         # Loop over M sub-steps
-        Lambda = gamma * (particles_in_cell - injected_particles)
+        
         for k in range(M):
             if particles_in_cell <= injected_particles:
                 break  # Exit loop if no more particles to inject
             
-            
+            Lambda = gamma * (particles_in_cell - injected_particles)
             injected_particles += np.random.poisson(Lambda * delta_tau)  # Update injected_particles
-
+            
         # Inject particles into the domain based on the number injected
         for j in range(injected_particles):
             x_pos = np.random.uniform(L - deltar, L)

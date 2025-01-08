@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=MultiSIRTauT                         # Job name
+#SBATCH --job-name=MultiSIRTau                         # Job name
 #SBATCH --partition=small                      # Partition name
 #SBATCH --array=1-500                          
 #SBATCH --mail-type=END                         # Mail events (NONE, BEGIN, END, FAIL, ALL)

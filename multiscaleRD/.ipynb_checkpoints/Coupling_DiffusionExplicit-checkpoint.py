@@ -12,8 +12,8 @@ import matplotlib
 import time
 matplotlib.use("agg")
 from functools import partial
-from Reaction_LV import *
 from Injection_SIR import *
+from Reaction_LV import *
 from Parameters_Diffusion import *
 import sys
 
@@ -55,7 +55,7 @@ deltar = np.sqrt(deltat * D * 2)
 x0 = np.array([L + 1, L])  # Location of source
 dx_hist = a / l_coupling  # Length of histogram cell edge (equals to h)
 dtshould = deltar * deltar / (2.0 * D)  # Time-step size
-print(dtshould, deltat, 'Should be equal', r1, 'r1')
+print(dtshould, deltat, 'Should be equal')
 gamma = D / (deltar ** 2)  # Injection rate
 
 '''1. Calculate the boundary concentration 'Boundaryconcentration' from the FD solution'''
@@ -64,7 +64,7 @@ maxtime = deltat * (timesteps - 1)  # Maximum time simulation can reach
 Time = np.linspace(0, maxtime, timesteps)
 
 
-listC = np.load('./Solutions/FDSolution_Diffusion2.npy')  # Data from continuous solution
+listC = np.load('./Solutions/FDSolution_Diffusion.npy')  # Data from continuous solution
 
 
 yarray = np.arange(0, a, deltar)  # Array to locate boundary cells  
@@ -102,22 +102,14 @@ def functionsimulation(ts):
 
         # Injection
         PreyChildrenInj = concentrationmovement(Boundaryconcentration[:, t], deltat * 0.5, deltar, L, gamma)
-    
 
-        # Reaction
-        #PreyChildrenProlif1, NotProliferatedPreys = proliferation(PreyPosition, r1, deltat * 0.5)
-       
 
         # Put them all together
-        PreyPosition = PreyChildrenInj  + PreyPosition
-        #PreyPosition = PreyChildrenInj + PreyChildrenProlif1 + PreyPosition
-
+        PreyPosition = PreyChildrenInj  + PreyPosition 
 
         # Diffusion
         PreyPosition = movement(PreyPosition, deltat, D, L, a)
       
-        # Reaction
-        #PreyChildrenProlif1, NotProliferatedPreys = proliferation(PreyPosition, r1, deltat * 0.5)
        
         PreyChildrenInj = concentrationmovement(Boundaryconcentration[:, t], deltat * 0.5, deltar, L, gamma)
 

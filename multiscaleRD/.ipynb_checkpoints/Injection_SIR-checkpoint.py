@@ -14,7 +14,7 @@ that had proliferated from the PREVIOUS time-step can be injected (concentration
 """
 import numpy as np
 
-
+# implicit injection
 
 def concentrationmovement( Boundaryconcentration_t, deltat,deltar, L, gamma): 
     

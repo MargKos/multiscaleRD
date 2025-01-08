@@ -12,8 +12,8 @@ import matplotlib
 matplotlib.use("agg")
 import time
 from functools import partial
-from Reaction_LV import *
 from Injection_SIRTau import *
+from Reaction_LV import *
 from Parameters_Diffusion import *
 import sys
 
@@ -63,7 +63,7 @@ maxtime = deltat * (timesteps - 1)  # Maximum time simulation can reach
 Time = np.linspace(0, maxtime, timesteps)
 
 
-listC = np.load('./Solutions/FDSolution_Diffusion2.npy')  # Data from continuous solution
+listC = np.load('./Solutions/FDSolution_Diffusion.npy')  # Data from continuous solution
 
 
 
@@ -101,7 +101,7 @@ def functionsimulation(ts):
     for t in range(timesteps):
 
         # Injection
-        PreyChildrenInj = concentrationmovement_tauleapingM1(Boundaryconcentration[:, t], deltat * 0.5, deltar, L, gamma)
+        PreyChildrenInj = concentrationmovement_tauleaping(Boundaryconcentration[:, t], deltat * 0.5, deltar, L, gamma,10)
 
         # Put them all together
         PreyPosition = PreyChildrenInj + PreyPosition
@@ -111,7 +111,7 @@ def functionsimulation(ts):
         PreyPosition = movement(PreyPosition, deltat, D, L, a)
       
        
-        PreyChildrenInj = concentrationmovement_tauleapingM1(Boundaryconcentration[:, t], deltat * 0.5, deltar, L, gamma )
+        PreyChildrenInj = concentrationmovement_tauleaping(Boundaryconcentration[:, t], deltat * 0.5, deltar, L, gamma,10 )
 
 
         # Put them all together
@@ -137,4 +137,4 @@ end_time=time.time()
 elapsed_time = end_time - start_time
 
 # Save the elapsed time as a .npy file
-np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/execution_timeTauDiffusionnew'+str(start)+'.npy', elapsed_time)
+np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/execution_timeTauDiffusion'+str(start)+'.npy', elapsed_time)

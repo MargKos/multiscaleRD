@@ -1,19 +1,31 @@
 from __future__ import division
 import numpy as np
-from ParametersB_SIR import *
 from scipy.stats import entropy
 
 # Preload reference data into memory
-ReferenceSus = np.load('./Solutions/FDSIR1_B.npy')
-ReferenceInf = np.load('./Solutions/FDSIR2_B.npy')
-ReferenceRec = np.load('./Solutions/FDSIR3_B.npy')
-
+ReferenceSus = np.load('./Solutions/FDSolution_Diffusion.npy')
 # Parameters
+
+l=100+1 # number of grids in x direction, should fit to a s.t. a/(l-1) is a 'good' number
+m=l # number of grids in y direction
+D=3
+deltat=0.002
+timesteps=500+1 
+
+a=10 #domain boundary
+
+  
+
+''' Parameters only for Coupling'''
+L=a/2 # x coordinate where the the PBS and FD domain are seperated
+deltar=np.sqrt(deltat*D*2) # boundary size
+l_coupling=l-1 
+h=0.1
 ts = 0.1
 constant = int(ts / deltat)
-sim_values = [1,10,25,50, 100, 150, 200, 250, 300, 350, 400, 450, 500]
+sim_values = [30, 50, 100, 200]
 Times = [4, 9]
-batches = 50
+batches = 10
 xbins = np.arange(0, a + h, h)
 ybins = np.arange(0, a + h, h)
 
@@ -50,28 +62,22 @@ def Discretization(Particles):
     return concentration
 
 
-def functionAverage(Indices, time, all_sus, all_inf, all_rec):
+def functionAverage(Indices, time, all_sus):
     """
     Returns the mean-field concentration for each time-step by averaging over all
     simulations
     """
     num_bins = int(a / h)
     DiscreteSus = np.empty([len(Indices), num_bins, num_bins])
-    DiscreteInf = np.empty([len(Indices), num_bins, num_bins])
-    DiscreteRec = np.empty([len(Indices), num_bins, num_bins])
-
+   
     for k, idx in enumerate(Indices):
         # Get preloaded particle data
         discrete_sus = Discretization(all_sus[idx])
-        discrete_inf = Discretization(all_inf[idx])
-        discrete_rec = Discretization(all_rec[idx])
-
+       
         DiscreteSus[k, :, :] = discrete_sus
-        DiscreteInf[k, :, :] = discrete_inf
-        DiscreteRec[k, :, :] = discrete_rec
-
+      
     # Return averages over all selected simulations
-    return DiscreteSus.mean(axis=0), DiscreteInf.mean(axis=0), DiscreteRec.mean(axis=0)
+    return DiscreteSus.mean(axis=0)
 
 
 def JSD(P, Q):
@@ -85,66 +91,52 @@ def JSD(P, Q):
     norm_Q = np.sum(Q)
     P_t = P_t / norm_Q
     Q_t = Q_t / norm_Q
-
     M = 0.5 * (P_t + Q_t)
     return 0.5 * (entropy(P_t, M) + entropy(Q_t, M))
 
 
 # Preload all particle data into memory
 all_sus_files = [
-    np.load(f'/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/SIRSusTauB{s}time{time}.npy', allow_pickle=True)
-    for s in range(500)
-    for time in Times
-]
-all_inf_files = [
-    np.load(f'/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/SIRInfTauB{s}time{time}.npy', allow_pickle=True)
-    for s in range(500)
-    for time in Times
-]
-all_rec_files = [
-    np.load(f'/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/SIRRecoveryTauB{s}time{time}.npy', allow_pickle=True)
-    for s in range(500)
+    np.load(f'/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/TauDiffusionParticles_{s}_time{time}.npy', allow_pickle=True)
+    for s in range(200)
     for time in Times
 ]
 
+#all_sus_files = [
+#    np.load(f'/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/ExplicitDiffusionParticles{s}#time{time}.npy', allow_pickle=True)
+#    for s in range(500)
+#    for time in Times
+#]
+     
             
 # Results arrays
 SusJSDSimulations = np.zeros((len(sim_values), len(Times)))
-InfJSDSimulations = np.zeros((len(sim_values), len(Times)))
-RecJSDSimulations = np.zeros((len(sim_values), len(Times)))
 
 # Main loop over fixed `s` values
 for s_idx, s in enumerate(sim_values):
     for t_idx, time in enumerate(Times):
         batch_jsd_sus = 0
-        batch_jsd_inf = 0
-        batch_jsd_rec = 0
+       
 
         for _ in range(batches):
             # Randomly sample `s` simulations
-            SimulationIndices = np.random.choice(range(500), size=s, replace=False)
+            SimulationIndices = np.random.choice(range(200), size=s, replace=False)
 
             # Compute average for the sampled simulations
-            DiscreteSusAverage, DiscreteInfAverage, DiscreteRecAverage = functionAverage(
-                SimulationIndices, time, all_sus_files, all_inf_files, all_rec_files
-            )
+            DiscreteSusAverage = functionAverage(SimulationIndices, time, all_sus_files)
 
             # Hybrid plots
             HybridSus = HybridPlot(DiscreteSusAverage, ReferenceSus[int(constant * (time + 1))], l_coupling)
-            HybridInf = HybridPlot(DiscreteInfAverage, ReferenceInf[int(constant * (time + 1))], l_coupling)
-            HybridRec = HybridPlot(DiscreteRecAverage, ReferenceRec[int(constant * (time + 1))], l_coupling)
-
+            print(np.shape(HybridSus))
+            print(np.shape(ReferenceSus[int(constant * (time + 1))]))
             # Calculate JSD for each
             batch_jsd_sus += JSD(HybridSus, ReferenceSus[int(constant * (time + 1))])
-            batch_jsd_inf += JSD(HybridInf, ReferenceInf[int(constant * (time + 1))])
-            batch_jsd_rec += JSD(HybridRec, ReferenceRec[int(constant * (time + 1))])
-
+            
+            
         # Average over batches
         SusJSDSimulations[s_idx, t_idx] = batch_jsd_sus / batches
-        InfJSDSimulations[s_idx, t_idx] = batch_jsd_inf / batches
-        RecJSDSimulations[s_idx, t_idx] = batch_jsd_rec / batches
-
+       
 # Save results
-np.save('./Solutions/JSDSusTauB.npy', SusJSDSimulations)
-np.save('./Solutions/JSDRecTauB.npy', RecJSDSimulations)
-np.save('./Solutions/JSDInfTauB.npy', InfJSDSimulations)
+#np.save('./Solutions/JSDTauDiffusion.npy', SusJSDSimulations)
+
+np.save('./Solutions/JSDExplicitDiffusion.npy', SusJSDSimulations)

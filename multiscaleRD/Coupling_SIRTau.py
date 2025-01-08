@@ -16,10 +16,10 @@ from functools import partial
 from Reaction_SIRImplicit import *
 from Injection_SIRTau import *
 from ParametersB_SIR import * 
-
-
-
 import sys
+
+
+# injection with tau leaping (M=10) and reaction across borders implicit
 
 if len(sys.argv) < 2:
     print('No input provided...')
@@ -143,11 +143,11 @@ def functionsimulation(ts):
         # Injection
        
         SusChildrenInj = concentrationmovement_tauleaping(Boundaryconcentration1[:, t], deltat * 1 / 2, deltar1, Lx,
-                                                  gamma1,1)
+                                                  gamma1,5)
         InfChildrenInj = concentrationmovement_tauleaping(Boundaryconcentration2[:, t], deltat * 1 / 2, deltar2, Lx,
-                                                 gamma2,1)
+                                                 gamma2,5)
         RecoveryChildrenInj = concentrationmovement_tauleaping(Boundaryconcentration3[:, t],deltat * 1 / 2, deltar3, Lx
-                                                    , gamma3,1)
+                                                    , gamma3,5)
 
         # Reaction
         # Recovery of I
@@ -183,11 +183,11 @@ def functionsimulation(ts):
 
         # Injection
         SusChildrenInj = concentrationmovement_tauleaping(Boundaryconcentration1[:, t], deltat * 1 / 2, deltar1, Lx,
-                                                  gamma1,1)
+                                                  gamma1,5)
         InfChildrenInj = concentrationmovement_tauleaping(Boundaryconcentration2[:, t], deltat * 1 / 2, deltar2, Lx,
-                                                 gamma2,1)
+                                                 gamma2,5)
         RecoveryChildrenInj = concentrationmovement_tauleaping(Boundaryconcentration3[:, t], deltat * 1 / 2, deltar3, Lx
-                                                    , gamma3,1)
+                                                    , gamma3,5)
 
         # Put them all together
         SusPosition.extend(SusChildrenInj)
@@ -200,12 +200,12 @@ def functionsimulation(ts):
             InfPositionHalfTime[k] = np.array(InfPosition)
             RecoveryPositionHalfTime[k] = np.array(RecoveryPosition)
             # save results
-            np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/SIRSusTauBNew' + str(start) + 'time'
+            np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/SIRSusTauB' + str(start) + 'time'
                     +str(k)+'', SusPositionHalfTime[k])
-            np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/SIRInfTauBNew' + str(start) + 'time'
+            np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/SIRInfTauB' + str(start) + 'time'
                     +str(k)+'',
                     InfPositionHalfTime[k])
-            np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/SIRRecoveryTauBNew' + str(start) +'time'
+            np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/SIRRecoveryTauB' + str(start) +'time'
                     +str(k)+ '',
                     RecoveryPositionHalfTime[k])
             k += 1
@@ -225,5 +225,4 @@ print('Task number', start, 'is done')
 elapsed_time = end_time - start_time-internal_reaction_total_time
 
 # Save the elapsed time as a .npy file
-np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/SIR_timeTauCutBNew'+str(start)+'.npy', elapsed_time)
-
+np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/SIR_timeTauCutB'+str(start)+'.npy', elapsed_time)
