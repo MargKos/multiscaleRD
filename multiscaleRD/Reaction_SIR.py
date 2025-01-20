@@ -10,7 +10,7 @@ import numpy as np
 from math import exp
 import time
 
-# in this code prey and predator have the same soze of boundary cells
+# in this code prey and predator have the same size of boundary cells
 
 def movement(Particles,  deltat, D, Lx, a):
     

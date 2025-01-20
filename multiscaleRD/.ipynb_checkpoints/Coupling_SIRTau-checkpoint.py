@@ -50,6 +50,8 @@ The code consists of the following components:
 1) Calculate the boundary concentration for EACH timestep
 2) Iteration with Strang Splitting using the function from Reaction.py and Injection.py: Injection, Reaction, Diffusion, Reaction, Injection.
 3) Multiprocessing that does many simulations at the same time
+
+Implicit Reaction and Tau Injection
 '''
 #%%
 

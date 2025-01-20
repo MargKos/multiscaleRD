@@ -80,13 +80,11 @@ def functionAverage():
         print(s)
         for t in range(timesteps_cut):
           
-            Prey_s_t=np.load(f'/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/TauDiffusionParticles_{s}_time{t}.npy', allow_pickle=True)
+            Prey_s_t=np.load(f'/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/TauDiffusionParticlesM10_{s}_time{t}.npy', allow_pickle=True)
             
             discrete_Prey_s_t=Discretization(a, l_coupling, Prey_s_t)
             
             DiscretePrey[s,t,:,:]=discrete_Prey_s_t
-
-           
 
     
     # average over simulations 
@@ -100,7 +98,7 @@ def functionAverage():
 
 DiscretePreyAverage=functionAverage()
 
-np.save('./Solutions/TauDiffusionAverage.npy', DiscretePreyAverage)
+np.save('./Solutions/TauDiffusionAverageM10.npy', DiscretePreyAverage)
 
 
 print('done averaging')

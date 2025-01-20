@@ -10,6 +10,8 @@ import numpy as np
 from math import exp
 import time
 
+# implicit s.o. reaction with volume reactivity model
+
 def movement(Particles,  deltat, D, Lx, a):
     
     ''' 

@@ -13,11 +13,11 @@ that had proliferated from the PREVIOUS time-step can be injected (concentration
 
 """
 import numpy as np
-
-# implicit injection
+import time
+# explicit injection
 
 def concentrationmovement( Boundaryconcentration_t, deltat,deltar, L, gamma): 
-    
+    start=time.time()
     '''
     Returns a list of positions (2D arrays) of the new particles in the PBS domain (Children). The particles are injected with proabibility gamma. 
     Only the particles that did not proliferated in the same time-step can be injected. Therefore we have to subtract the 'Extra' particles 
@@ -29,6 +29,7 @@ def concentrationmovement( Boundaryconcentration_t, deltat,deltar, L, gamma):
     deltar=boundary cell length and width
     Extra=number of  actual dead virtal preys in the boundary cell
     L=domain size
+    timeinjection computes the time for the whole injection process
     '''
     Children=[]
     Pr=1-np.exp(-gamma*deltat) # probability of injection
@@ -40,8 +41,9 @@ def concentrationmovement( Boundaryconcentration_t, deltat,deltar, L, gamma):
                 Children.append(np.array([np.random.uniform(L-deltar, L), np.random.uniform(deltar*i,deltar*(i+1))]))        
         if 1-np.exp(-gamma*deltat*dec)>np.random.rand(): # for the virtual particle
             Children.append(np.array([np.random.uniform(L-deltar,L), np.random.uniform(deltar*i, deltar*(i+1))]))
-
-    return Children
+    end=time.time()
+    timeinjection=end-start
+    return Children, timeinjection
 
 
 

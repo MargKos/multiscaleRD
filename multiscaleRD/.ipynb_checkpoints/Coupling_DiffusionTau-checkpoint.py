@@ -16,6 +16,7 @@ from Injection_SIRTau import *
 from Reaction_LV import *
 from Parameters_Diffusion import *
 import sys
+import time
 
 
 if len(sys.argv) < 2:
@@ -84,8 +85,9 @@ Boundaryconcentration = averageNumberParticles
 def arrays_to_tuples(arrays):
     return set(tuple(array) for array in arrays)
 
-start_time=time.time()
+
 def functionsimulation(ts):
+    counter_time=0
     # which time-steps to save
     timesteps_cut = int(deltat * (timesteps-1) / ts)
     
@@ -101,8 +103,8 @@ def functionsimulation(ts):
     for t in range(timesteps):
 
         # Injection
-        PreyChildrenInj = concentrationmovement_tauleaping(Boundaryconcentration[:, t], deltat * 0.5, deltar, L, gamma,10)
-
+        PreyChildrenInj, time1 = concentrationmovement_tauleaping(Boundaryconcentration[:, t], deltat * 0.5, deltar, L, gamma,50)
+        counter_time+=time1
         # Put them all together
         PreyPosition = PreyChildrenInj + PreyPosition
 
@@ -111,7 +113,8 @@ def functionsimulation(ts):
         PreyPosition = movement(PreyPosition, deltat, D, L, a)
       
        
-        PreyChildrenInj = concentrationmovement_tauleaping(Boundaryconcentration[:, t], deltat * 0.5, deltar, L, gamma,10 )
+        PreyChildrenInj,time2 = concentrationmovement_tauleaping(Boundaryconcentration[:, t], deltat * 0.5, deltar, L, gamma,50 )
+        counter_time+=time2
 
 
         # Put them all together
@@ -120,21 +123,21 @@ def functionsimulation(ts):
         if t%int((timesteps-1)/timesteps_cut)==0 and t!=0:
                 
             PreyPositionHalfTime[k] = np.array(PreyPosition)
-            np.save(f'/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/TauDiffusionParticles_{start}_time{k}.npy', PreyPosition)
+            np.save(f'/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/TauDiffusionParticlesM50_{start}_time{k}.npy', PreyPosition)
             
             k += 1
             print((t)*deltat, timesteps/timesteps_cut)
     
-    return PreyPositionHalfTime
+    return PreyPositionHalfTime, counter_time
 #%%
 save_time=0.1
 
 # Call the function
-PreySimulation= functionsimulation(save_time)
+PreySimulation, counter_time= functionsimulation(save_time)
 
-end_time=time.time()
-# Calculate elapsed time
-elapsed_time = end_time - start_time
+
 
 # Save the elapsed time as a .npy file
-np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/execution_timeTauDiffusion'+str(start)+'.npy', elapsed_time)
+np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/execution_timeTauDiffusionM50'+str(start)+'.npy', counter_time)
+
+print(counter_time)

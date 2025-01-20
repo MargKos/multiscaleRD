@@ -8,7 +8,7 @@ Created on Fri May 29 14:20:10 2020
 from __future__ import division
 import numpy as np
 
-'Parameters'
+'Parameters for Paper  	https://doi.org/10.48550/arXiv.2006.00003'
 
 def fconstant1(x):
 	if 5.1<=x[0]<=7.1 and 4<=x[1]<=6. :

@@ -50,6 +50,9 @@ The code consists of the following components:
 1) Calculate the boundary concentration for EACH timestep
 2) Iteration with Strang Splitting using the function from Reaction.py and Injection.py: Injection, Reaction, Diffusion, Reaction, Injection.
 3) Multiprocessing that does many simulations at the same time
+
+Implcit Reaction and Explicit Injection
+
 '''
 #%%
 
@@ -142,11 +145,11 @@ def functionsimulation(ts):
         
         # Injection
        
-        SusChildrenInj = concentrationmovement(Boundaryconcentration1[:, t], deltat * 1 / 2, deltar1, Lx,
+        SusChildrenInj, time_injection = concentrationmovement(Boundaryconcentration1[:, t], deltat * 1 / 2, deltar1, Lx,
                                                   gamma1)
-        InfChildrenInj = concentrationmovement(Boundaryconcentration2[:, t], deltat * 1 / 2, deltar2, Lx,
+        InfChildrenInj, time_injection = concentrationmovement(Boundaryconcentration2[:, t], deltat * 1 / 2, deltar2, Lx,
                                                  gamma2)
-        RecoveryChildrenInj = concentrationmovement(Boundaryconcentration3[:, t],deltat * 1 / 2, deltar3, Lx
+        RecoveryChildrenInj, time_injection = concentrationmovement(Boundaryconcentration3[:, t],deltat * 1 / 2, deltar3, Lx
                                                     , gamma3)
 
         # Reaction
@@ -182,11 +185,11 @@ def functionsimulation(ts):
         InfPosition, RecoveryNew2 = dying(InfPosition, r2, deltat * 0.25, InfB)
 
         # Injection
-        SusChildrenInj = concentrationmovement(Boundaryconcentration1[:, t], deltat * 1 / 2, deltar1, Lx,
+        SusChildrenInj, time_injection = concentrationmovement(Boundaryconcentration1[:, t], deltat * 1 / 2, deltar1, Lx,
                                                   gamma1)
-        InfChildrenInj = concentrationmovement(Boundaryconcentration2[:, t], deltat * 1 / 2, deltar2, Lx,
+        InfChildrenInj, time_injection = concentrationmovement(Boundaryconcentration2[:, t], deltat * 1 / 2, deltar2, Lx,
                                                  gamma2)
-        RecoveryChildrenInj = concentrationmovement(Boundaryconcentration3[:, t], deltat * 1 / 2, deltar3, Lx
+        RecoveryChildrenInj, time_injection = concentrationmovement(Boundaryconcentration3[:, t], deltat * 1 / 2, deltar3, Lx
                                                     , gamma3)
 
         # Put them all together
@@ -200,12 +203,12 @@ def functionsimulation(ts):
             InfPositionHalfTime[k] = np.array(InfPosition)
             RecoveryPositionHalfTime[k] = np.array(RecoveryPosition)
             # save results
-            np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/SIRSusImplicitB' + str(start) + 'time'
+            np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscaleFinal/SIRSusImplicitB' + str(start) + 'time'
                     +str(k)+'', SusPositionHalfTime[k])
-            np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/SIRInfImplicitB' + str(start) + 'time'
+            np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscaleFinal/SIRInfImplicitB' + str(start) + 'time'
                     +str(k)+'',
                     InfPositionHalfTime[k])
-            np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/SIRRecoveryImplciitB' + str(start) +'time'
+            np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscaleFinal/SIRRecoveryImplciitB' + str(start) +'time'
                     +str(k)+ '',
                     RecoveryPositionHalfTime[k])
             k += 1
@@ -225,4 +228,4 @@ print('Task number', start, 'is done')
 elapsed_time = end_time - start_time-internal_reaction_total_time
 
 # Save the elapsed time as a .npy file
-np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/SIR_timeImplicitCutB'+str(start)+'.npy', elapsed_time)
+np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscaleFinal/SIR_timeImplicitCutB'+str(start)+'.npy', elapsed_time)

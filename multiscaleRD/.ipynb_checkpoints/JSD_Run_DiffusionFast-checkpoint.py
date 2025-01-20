@@ -1,142 +1,171 @@
 from __future__ import division
 import numpy as np
 from scipy.stats import entropy
-
-# Preload reference data into memory
-ReferenceSus = np.load('./Solutions/FDSolution_Diffusion.npy')
-# Parameters
-
-l=100+1 # number of grids in x direction, should fit to a s.t. a/(l-1) is a 'good' number
-m=l # number of grids in y direction
-D=3
-deltat=0.002
-timesteps=500+1 
-
-a=10 #domain boundary
-
-  
-
-''' Parameters only for Coupling'''
-L=a/2 # x coordinate where the the PBS and FD domain are seperated
-deltar=np.sqrt(deltat*D*2) # boundary size
-l_coupling=l-1 
-h=0.1
-ts = 0.1
-constant = int(ts / deltat)
-sim_values = [30, 50, 100, 200]
-Times = [4, 9]
-batches = 10
-xbins = np.arange(0, a + h, h)
-ybins = np.arange(0, a + h, h)
+from Parameters_Diffusion import *
+import numpy as np
+from scipy.stats import entropy
 
 
-def HybridPlot(Average, Reference, bd):
-    """
-    Creates hybrid plots, where the right side corresponds to the FD solution
-    """
-    Average_t = np.transpose(Average)  # Get reservoir
+ReferencePrey = np.load('./Solutions/FDSolution_Diffusion.npy')
+
+h=a/(l-1)
+discret=int(a/h)
+ts=0.1
+timesteps_cut = int(deltat * (timesteps-1) / ts)
+dx_hist=a/l_coupling
+constant=int(ts/deltat)
+
+
+print(deltat, 'dt', timesteps_cut, 'timesteps_cut', timesteps, 'timesteps')
+'''Densities'''
+
+def Discretization(a, discret, Particles): 
     
-    # Create matrix from particle discretization
-    Hybrid = np.zeros(shape=(l_coupling, l_coupling))
-    
-    for i in range(l_coupling):
-        for j in range(int(l_coupling / 2)):
-            Hybrid[i, j] = Average_t[i, j]
-        
-        for j in range(int(l_coupling / 2)):
-            Hybrid[i, j + int(l_coupling / 2)] = Reference[i, j + int(l_coupling / 2)]
-    return Hybrid
-
-
-def Discretization(Particles):
-    """
+    '''
     Return the concentration of particles.
-    Particles: list of 2D arrays
-    """
-    xPositions = [p[0] for p in Particles]
-    yPositions = [p[1] for p in Particles]
-    concentration, _, _ = np.histogram2d(
-        xPositions, yPositions, bins=(xbins, ybins),
-        weights=np.ones_like(xPositions) / (h**2)
-    )
+    a=domain length
+    discret=discrtization parameter (number of cells)
+    Particles=list of 2D arrays
+    '''
+    
+    xPositions=[]
+    yPositions=[]
+    for i in range(len(Particles)):
+       
+        xPositions.append(Particles[i][0])
+        yPositions.append(Particles[i][1])
+    
+   
+    xbins=np.arange(0,a+h, h)
+    ybins=np.arange(0,a+h, h)
+    concentration, xbins, ybins=np.histogram2d(xPositions, yPositions, bins=(xbins, ybins), weights=np.ones_like(xPositions)/(h**2))
+   
     return concentration
+    
+def HybridPlot(Average, Reference, bd):
+    '''
+    Creates hybrid plots, where the right side corresponds to the FD solution
+    and the left side to the mean-field concentration obtained from the coupling.
+    Average=mean-field concentration
+    Concentration=FD solution
+    bd=location of the boundary
+    '''
+
+    listH = []  # list of Hybrid solutions
+    listR = []  # list of Reference solutions
+    
+   
+    if len(Average)!=timesteps_cut:
+        print('error')
+        
+    for t in range(timesteps_cut):
+        Ref_t=Reference[(t+1)*constant]
+        Average_t = np.transpose(Average[t]) 
+        # create matrix fromt he particle discretization
+        Particle = np.zeros(shape=(l_coupling,l_coupling))
+        
+        for i in range(l_coupling):
+            for j in range(int(l_coupling / 2) ):
+                Particle[i, j] = Average_t[i, j]
+            
+            for j in range(int(l_coupling / 2)):
+                
+                Particle[i,j+int(l_coupling/2)]=Ref_t[i,j+int(l_coupling/2)]
+        listH.append(Particle)
+            
+        
+    for t in range(timesteps_cut):
+        
+        Ref_t=Reference[(t+1)*constant]
+       
+       
+        listR.append(Ref_t)
+
+    return listH, listR
 
 
-def functionAverage(Indices, time, all_sus):
-    """
+def functionAverage(sim): 
+    
+    '''
     Returns the mean-field concentration for each time-step by averaging over all
     simulations
-    """
-    num_bins = int(a / h)
-    DiscreteSus = np.empty([len(Indices), num_bins, num_bins])
-   
-    for k, idx in enumerate(Indices):
-        # Get preloaded particle data
-        discrete_sus = Discretization(all_sus[idx])
-       
-        DiscreteSus[k, :, :] = discrete_sus
-      
-    # Return averages over all selected simulations
-    return DiscreteSus.mean(axis=0)
+    PreySimulation=list of all simulations, see Coupling.py
+    '''
 
+    
+    timesteps_cut = int(deltat * (timesteps-1) / ts)
+    
+    number_bins=int(a/h)
+    
+    DiscretePrey=np.empty([sim,timesteps_cut, number_bins,number_bins])
+    DiscretePreyAverage=np.empty([timesteps_cut, number_bins,number_bins])
+
+
+    for s in range(sim):
+       
+        print(s)
+        for t in range(timesteps_cut):
+          
+            Prey_s_t=np.load(f'/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/TauDiffusionParticlesM10_{s}_time{t}.npy', allow_pickle=True)
+            
+            discrete_Prey_s_t=Discretization(a, l_coupling, Prey_s_t)
+            
+            DiscretePrey[s,t,:,:]=discrete_Prey_s_t
+
+    
+    # average over simulations 
+    for t in range(timesteps_cut):
+        
+
+        DiscretePreyAverage[t,:,:]=np.mean(DiscretePrey[:,t,:,:], axis=0)
+       
+    return DiscretePreyAverage
+
+sim=500
+DiscretePreyAverage=functionAverage(sim)
 
 def JSD(P, Q):
-    """
-    Calculate the Jensen-Shannon Divergence between P and Q
-    """
+
+    # go over all time steps
+    # Q should be the reference solution
     P_t = P.flatten()
     Q_t = Q.flatten()
+    
+    # normalize P and Q
+    
+    norm_Q=np.sum(Q)
+    
+    P_t=P_t/norm_Q
+    Q_t=Q_t/norm_Q
 
-    # Normalize P and Q
-    norm_Q = np.sum(Q)
-    P_t = P_t / norm_Q
-    Q_t = Q_t / norm_Q
+    # calculate JSD
+
     M = 0.5 * (P_t + Q_t)
-    return 0.5 * (entropy(P_t, M) + entropy(Q_t, M))
 
+    JSD = 0.5 * (entropy(P_t, M) + entropy(Q_t, M))
 
-# Preload all particle data into memory
-all_sus_files = [
-    np.load(f'/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/TauDiffusionParticles_{s}_time{time}.npy', allow_pickle=True)
-    for s in range(200)
-    for time in Times
-]
-
-#all_sus_files = [
-#    np.load(f'/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/ExplicitDiffusionParticles{s}#time{time}.npy', allow_pickle=True)
-#    for s in range(500)
-#    for time in Times
-#]
-     
-            
-# Results arrays
-SusJSDSimulations = np.zeros((len(sim_values), len(Times)))
-
-# Main loop over fixed `s` values
-for s_idx, s in enumerate(sim_values):
-    for t_idx, time in enumerate(Times):
-        batch_jsd_sus = 0
        
 
-        for _ in range(batches):
-            # Randomly sample `s` simulations
-            SimulationIndices = np.random.choice(range(200), size=s, replace=False)
+    return JSD
 
-            # Compute average for the sampled simulations
-            DiscreteSusAverage = functionAverage(SimulationIndices, time, all_sus_files)
 
-            # Hybrid plots
-            HybridSus = HybridPlot(DiscreteSusAverage, ReferenceSus[int(constant * (time + 1))], l_coupling)
-            print(np.shape(HybridSus))
-            print(np.shape(ReferenceSus[int(constant * (time + 1))]))
-            # Calculate JSD for each
-            batch_jsd_sus += JSD(HybridSus, ReferenceSus[int(constant * (time + 1))])
-            
-            
-        # Average over batches
-        SusJSDSimulations[s_idx, t_idx] = batch_jsd_sus / batches
+
+
+        
+HybridPrey, ReferencePrey = HybridPlot(DiscretePreyAverage, ReferencePrey, l_coupling)   
+
+
+
+Times=[0,1,2,3,4,5,6,7,8,9]
+JSD_Time=np.zeros(len(Times))
+for t in Times:
+   
+    P=HybridPrey[t]
+    Q=ReferencePrey[t]
+    jsd=JSD(P, Q)
+    JSD_Time[t]=jsd
        
+
 # Save results
-#np.save('./Solutions/JSDTauDiffusion.npy', SusJSDSimulations)
-
-np.save('./Solutions/JSDExplicitDiffusion.npy', SusJSDSimulations)
+np.save('./Solutions/JSDTauDiffusionM10.npy',JSD_Time )
+print(JSD_Time, 'M10')

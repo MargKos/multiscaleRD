@@ -8,7 +8,7 @@ Created on Mon May  4 11:42:00 2020
 from __future__ import division
 import numpy as np
 from math import exp
-''' Code for LV open system with different diffusion coefficients of prey and predator'''
+''' Code for LV open system with different diffusion coefficients of prey and predator with explicit reaction across borders'''
 
 
 

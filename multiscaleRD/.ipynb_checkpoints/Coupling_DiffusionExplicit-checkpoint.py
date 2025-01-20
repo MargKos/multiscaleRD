@@ -84,8 +84,9 @@ Boundaryconcentration = averageNumberParticles
 def arrays_to_tuples(arrays):
     return set(tuple(array) for array in arrays)
     
-start_time = time.time()
+
 def functionsimulation(ts):
+    counter_time=0
     # which time-steps to save
     timesteps_cut = int(deltat * (timesteps-1) / ts)
     
@@ -101,7 +102,8 @@ def functionsimulation(ts):
     for t in range(timesteps):
 
         # Injection
-        PreyChildrenInj = concentrationmovement(Boundaryconcentration[:, t], deltat * 0.5, deltar, L, gamma)
+        PreyChildrenInj, time1 = concentrationmovement(Boundaryconcentration[:, t], deltat * 0.5, deltar, L, gamma)
+        counter_time += time1
 
 
         # Put them all together
@@ -111,7 +113,8 @@ def functionsimulation(ts):
         PreyPosition = movement(PreyPosition, deltat, D, L, a)
       
        
-        PreyChildrenInj = concentrationmovement(Boundaryconcentration[:, t], deltat * 0.5, deltar, L, gamma)
+        PreyChildrenInj, time2 = concentrationmovement(Boundaryconcentration[:, t], deltat * 0.5, deltar, L, gamma)
+        counter_time += time2
 
 
         # Put them all together
@@ -126,16 +129,15 @@ def functionsimulation(ts):
             k += 1
             print((t)*deltat, timesteps/timesteps_cut)
     
-    return PreyPositionHalfTime
+    return PreyPositionHalfTime, counter_time
 #%%
 save_time=0.1
 
 # Call the function
-PreySimulation= functionsimulation(save_time)
-end_time = time.time()
+PreySimulation, counter_time= functionsimulation(save_time)
 
-# Calculate elapsed time
-elapsed_time = end_time - start_time
+
 
 # Save the elapsed time as a .npy file
-np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/execution_timeExplicitDiffusion'+str(start)+'.npy', elapsed_time)
+np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/execution_timeExplicitDiffusion'+str(start)+'.npy', counter_time)
+print(counter_time)

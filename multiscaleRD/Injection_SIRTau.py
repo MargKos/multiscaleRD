@@ -11,8 +11,9 @@ The functions will be used in the Strang splitting in the main file (Reaction+In
 
 
 import numpy as np
+import time
 
-# tau leaping injection
+# tau leaping injection with M intermediate steps
 
 def concentrationmovement_tauleaping(Boundaryconcentration_t, tau, deltar, L, gamma, M): 
     '''
@@ -30,7 +31,7 @@ def concentrationmovement_tauleaping(Boundaryconcentration_t, tau, deltar, L, ga
     Returns:
     - Children: List of 2D arrays with positions of newly injected particles in the PBS domain.
     '''
-    
+    start=time.time()
     Children = []
     delta_tau = tau / M  # Time step for each sub-step in tau-leaping
     
@@ -56,12 +57,14 @@ def concentrationmovement_tauleaping(Boundaryconcentration_t, tau, deltar, L, ga
             Children.append(np.array([x_pos, y_pos]))
         
         
-
-    return Children
+    end=time.time()
+    timeinjection=end-start
+    return Children,timeinjection
 
 
 
 def concentrationmovement_tauleapingM1(Boundaryconcentration_t, tau, deltar, L, gamma): 
+    # for M=1, not recommended 
     '''
     Optimized version of particle injection for M=1. Returns a list of positions (2D arrays) of the new particles 
     in the PBS domain (Children).
