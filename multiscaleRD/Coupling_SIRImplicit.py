@@ -208,7 +208,7 @@ def functionsimulation(ts):
             np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscaleFinal/SIRInfImplicitB' + str(start) + 'time'
                     +str(k)+'',
                     InfPositionHalfTime[k])
-            np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscaleFinal/SIRRecoveryImplciitB' + str(start) +'time'
+            np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscaleFinal/SIRRecoveryImplicitB' + str(start) +'time'
                     +str(k)+ '',
                     RecoveryPositionHalfTime[k])
             k += 1

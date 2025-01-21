@@ -18,7 +18,7 @@ def u_0(x):
 	return ux    
 
 
-'Parameters'
+'Parameters for paper https://doi.org/10.48550/arXiv.2006.00003'
 
 '''
 Space discretization

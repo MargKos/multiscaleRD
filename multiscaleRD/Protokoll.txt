@@ -58,6 +58,9 @@ deltar3=np.sqrt(deltat*D3*2) # boundary size
 l_coupling=l-1 
 save_time=0.1 
 
+M=5 for tau injection
+M=1 for implicit reaction across borders
+
 # FD files
 
 ReferenceSus = np.load('./Solutions/FDSIR1_B.npy')
@@ -66,21 +69,21 @@ ReferenceRec = np.load('./Solutions/FDSIR3_B.npy')
 
 # Simulations Files
 
-# tau reaction, exlicit injection
-Sus_s_t=np.load('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/'+str('SIRSusTauBTest')+str(s)+ 'time'
+# implicit reaction, exlicit injection
+Sus_s_t=np.load('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscaleFinal/'+str('SIRSusImplicitB')+str(s)+ 'time'
                     +str(t)+'.npy', allow_pickle=True)
-Inf_s_t=np.load('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/'+str('SIRInfTauBTest')+str(s)+ 'time'
+Inf_s_t=np.load('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscaleFinal/'+str('SIRInfImplicitB')+str(s)+ 'time'
         +str(t)+'.npy', allow_pickle=True)
-Recovery_s_t=np.load('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/'+str('SIRRecoveryTauBTest')+str(s)+ 'time'
+Recovery_s_t=np.load('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscaleFinal/'+str('SIRRecoveryImplicitBs')+str(s)+ 'time'
         +str(t)+'.npy', allow_pickle=True)
 
-# tau reaction and injection
+# implicit reaction, tau injection (M=5)
 
-Sus_s_t=np.load('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/'+str('SIRSusTauB')+str(s)+ 'time'
+Sus_s_t=np.load('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscaleFinal/'+str('SIRSusTauB')+str(s)+ 'time'
                     +str(t)+'.npy', allow_pickle=True)
-Inf_s_t=np.load('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/'+str('SIRInfTauB')+str(s)+ 'time'
+Inf_s_t=np.load('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscaleFinal/'+str('SIRInfTauB')+str(s)+ 'time'
         +str(t)+'.npy', allow_pickle=True)
-Recovery_s_t=np.load('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/'+str('SIRRecoveryTauB')+str(s)+ 'time'
+Recovery_s_t=np.load('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscaleFinal/'+str('SIRRecoveryTauB')+str(s)+ 'time'
         +str(t)+'.npy', allow_pickle=True)
 
 # explicit reaction and injection

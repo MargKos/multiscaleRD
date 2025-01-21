@@ -144,11 +144,11 @@ def functionsimulation(ts):
         
         # Injection
        
-        SusChildrenInj = concentrationmovement_tauleaping(Boundaryconcentration1[:, t], deltat * 1 / 2, deltar1, Lx,
+        SusChildrenInj,timeinjection = concentrationmovement_tauleaping(Boundaryconcentration1[:, t], deltat * 1 / 2, deltar1, Lx,
                                                   gamma1,5)
-        InfChildrenInj = concentrationmovement_tauleaping(Boundaryconcentration2[:, t], deltat * 1 / 2, deltar2, Lx,
+        InfChildrenInj,timeinjection = concentrationmovement_tauleaping(Boundaryconcentration2[:, t], deltat * 1 / 2, deltar2, Lx,
                                                  gamma2,5)
-        RecoveryChildrenInj = concentrationmovement_tauleaping(Boundaryconcentration3[:, t],deltat * 1 / 2, deltar3, Lx
+        RecoveryChildrenInj,timeinjection = concentrationmovement_tauleaping(Boundaryconcentration3[:, t],deltat * 1 / 2, deltar3, Lx
                                                     , gamma3,5)
 
         # Reaction
@@ -184,11 +184,11 @@ def functionsimulation(ts):
         InfPosition, RecoveryNew2 = dying(InfPosition, r2, deltat * 0.25, InfB)
 
         # Injection
-        SusChildrenInj = concentrationmovement_tauleaping(Boundaryconcentration1[:, t], deltat * 1 / 2, deltar1, Lx,
+        SusChildrenInj,timeinjection = concentrationmovement_tauleaping(Boundaryconcentration1[:, t], deltat * 1 / 2, deltar1, Lx,
                                                   gamma1,5)
-        InfChildrenInj = concentrationmovement_tauleaping(Boundaryconcentration2[:, t], deltat * 1 / 2, deltar2, Lx,
+        InfChildrenInj,timeinjection = concentrationmovement_tauleaping(Boundaryconcentration2[:, t], deltat * 1 / 2, deltar2, Lx,
                                                  gamma2,5)
-        RecoveryChildrenInj = concentrationmovement_tauleaping(Boundaryconcentration3[:, t], deltat * 1 / 2, deltar3, Lx
+        RecoveryChildrenInj,timeinjection = concentrationmovement_tauleaping(Boundaryconcentration3[:, t], deltat * 1 / 2, deltar3, Lx
                                                     , gamma3,5)
 
         # Put them all together
@@ -202,12 +202,12 @@ def functionsimulation(ts):
             InfPositionHalfTime[k] = np.array(InfPosition)
             RecoveryPositionHalfTime[k] = np.array(RecoveryPosition)
             # save results
-            np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/SIRSusTauB' + str(start) + 'time'
+            np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscaleFinal/SIRSusTauB' + str(start) + 'time'
                     +str(k)+'', SusPositionHalfTime[k])
-            np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/SIRInfTauB' + str(start) + 'time'
+            np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscaleFinal/SIRInfTauB' + str(start) + 'time'
                     +str(k)+'',
                     InfPositionHalfTime[k])
-            np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/SIRRecoveryTauB' + str(start) +'time'
+            np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscaleFinal/SIRRecoveryTauB' + str(start) +'time'
                     +str(k)+ '',
                     RecoveryPositionHalfTime[k])
             k += 1
@@ -227,4 +227,4 @@ print('Task number', start, 'is done')
 elapsed_time = end_time - start_time-internal_reaction_total_time
 
 # Save the elapsed time as a .npy file
-np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/SIR_timeTauCutB'+str(start)+'.npy', elapsed_time)
+np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscaleFinal/SIR_timeTauCutB'+str(start)+'.npy', elapsed_time)

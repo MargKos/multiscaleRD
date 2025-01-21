@@ -79,6 +79,7 @@ def concentrationmovement_tauleapingM1(Boundaryconcentration_t, tau, deltar, L, 
     Returns:
     - Children: List of 2D arrays with positions of newly injected particles in the PBS domain.
     '''
+    start=time.time()
     Children = []
     
     for i, particles_in_cell in enumerate(Boundaryconcentration_t):    
@@ -91,5 +92,6 @@ def concentrationmovement_tauleapingM1(Boundaryconcentration_t, tau, deltar, L, 
             x_positions = np.random.uniform(L - deltar, L, injected_particles)
             y_positions = np.random.uniform(deltar * i, deltar * (i + 1), injected_particles)
             Children.extend(np.column_stack((x_positions, y_positions)))
-
-    return Children
+    end=time.time()
+    timeinjection=end-start
+    return Children, timeinjection

@@ -7,7 +7,7 @@
 #SBATCH --nodes=1                               # Run all processes on a single node
 #SBATCH --ntasks=1                           # Number of tasks
 #SBATCH --time=00-10:00:00                      # Time limit (necessary for Z1)
-#SBATCH --output=job_%a-%a.log                  # Standard output and error log
+#SBATCH --output=/dev/null                   # Standard output and error log
 #SBATCH --nodelist=htc-cmp[101-148]                    # Run on nodes between 101 and 148
 
 

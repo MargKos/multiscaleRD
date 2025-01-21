@@ -84,11 +84,11 @@ def functionAverage():
         print(s)
         for t in range(timesteps_cut):
 
-            Sus_s_t=np.load('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/'+str('SIRSusTauB')+str(s)+ 'time'
+            Sus_s_t=np.load('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscaleFinal/'+str('SIRSusTauB')+str(s)+ 'time'
                     +str(t)+'.npy', allow_pickle=True)
-            Inf_s_t=np.load('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/'+str('SIRInfTauB')+str(s)+ 'time'
+            Inf_s_t=np.load('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscaleFinal/'+str('SIRInfTauB')+str(s)+ 'time'
                     +str(t)+'.npy', allow_pickle=True)
-            Recovery_s_t=np.load('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/'+str('SIRRecoveryTauB')+str(s)+ 'time'
+            Recovery_s_t=np.load('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscaleFinal/'+str('SIRRecoveryTauB')+str(s)+ 'time'
                     +str(t)+'.npy', allow_pickle=True)
             
             # Discretize Sus

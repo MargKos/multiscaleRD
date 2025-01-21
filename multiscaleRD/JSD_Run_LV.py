@@ -12,7 +12,7 @@ ReferencePred  = np.load('./Solutions/FDLVSolution2.npy')  # gets Data from cont
 ts = 0.1
 constant = int(ts / deltat)
 sim_values = [1,10,25,50, 100, 150, 200, 250, 300, 350, 400, 450, 500]
-Times = [10, 24]
+Times = [9, 14,24]
 batches = 50
 xbins = np.arange(0, a + h, h)
 ybins = np.arange(0, a + h, h)
@@ -106,30 +106,31 @@ PredJSDSimulations = np.zeros((len(sim_values), len(Times)))
 # Main loop over fixed `s` values
 for s_idx, s in enumerate(sim_values):
     for t_idx, time in enumerate(Times):
-        batch_jsd_sus = 0
-        batch_jsd_inf = 0
+        batch_jsd_Prey = 0
+        batch_jsd_Pred = 0
 
         for _ in range(batches):
             # Randomly sample `s` simulations
             SimulationIndices = np.random.choice(range(500), size=s, replace=False)
+            print(SimulationIndices, s)
 
             # Compute average for the sampled simulations
-            DiscreteSusAverage, DiscreteInfAveragee = functionAverage(
+            DiscretePreyAverage, DiscretePredAverage = functionAverage(
                 SimulationIndices, time, all_prey_files, all_pred_files
             )
 
             # Hybrid plots
-            HybridSus = HybridPlot(DiscreteSusAverage, ReferenceSus[int(constant * (time + 1))], l_coupling)
-            HybridInf = HybridPlot(DiscreteInfAverage, ReferenceInf[int(constant * (time + 1))], l_coupling)
+            HybridPrey = HybridPlot(DiscretePreyAverage, ReferencePrey[int(constant * (time + 1))], l_coupling)
+            HybridPred = HybridPlot(DiscretePredAverage, ReferencePred[int(constant * (time + 1))], l_coupling)
            
             # Calculate JSD for each
-            batch_jsd_sus += JSD(HybridSus, ReferenceSus[int(constant * (time + 1))])
-            batch_jsd_inf += JSD(HybridInf, ReferenceInf[int(constant * (time + 1))])
+            batch_jsd_Prey += JSD(HybridPrey, ReferencePrey[int(constant * (time + 1))])
+            batch_jsd_Pred += JSD(HybridPred, ReferencePred[int(constant * (time + 1))])
            
 
         # Average over batches
-        SusJSDSimulations[s_idx, t_idx] = batch_jsd_sus / batches
-        InfJSDSimulations[s_idx, t_idx] = batch_jsd_inf / batches
+        PreyJSDSimulations[s_idx, t_idx] = batch_jsd_Prey / batches
+        PredJSDSimulations[s_idx, t_idx] = batch_jsd_Pred / batches
 
 #%%
 np.save('./Solutions/LVPreyJSDPaper.npy', PreyJSDSimulations)

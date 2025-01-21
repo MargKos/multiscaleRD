@@ -136,7 +136,7 @@ def virtual(L, deltar, N,i):
 
 def eatcompact(A, B, L, deltar1, deltar2, BC1, BC2, rate, sigma, deltat, Lx):
     '''
-    Hybrid algorithm for second order reaction S+I->2I, if S and I are closer than sigma 
+    Hybrid algorithm (explicit exact scheme) for second order reaction S+I->2I, if S and I are closer than sigma 
     (reaction radius). It returns the new list of S particles with removed particles, a list of 
     I particles with new particles and a list of the new particles (new list of B = previous list of B + children).
     A, B = list of 2D arrays

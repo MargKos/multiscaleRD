@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=DSIRTau                         # Job name
+#SBATCH --job-name=DSIRIm                         # Job name
 #SBATCH --partition=big                      # Partition name                          
 #SBATCH --mail-type=END                         # Mail events (NONE, BEGIN, END, FAIL, ALL)
 #SBATCH --mail-user=kostre@zib.de              # Where to send mail

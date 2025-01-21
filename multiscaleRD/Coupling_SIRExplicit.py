@@ -106,6 +106,7 @@ Boundaryconcentration3 = calculate_boundary_concentration(yarray3, deltar3, list
 #%%
 start_time=time.time()
 def functionsimulation(ts):
+    internal_reaction_total_time=0
     '''
     Returns lists for S, I, R consisting of trajectories at every desirable time-step and for every simulation and the reference solutions
     simulations = number of simulations
@@ -137,11 +138,11 @@ def functionsimulation(ts):
     for t in range(timesteps):
         
         # Injection
-        SusChildrenInj = concentrationmovement(Boundaryconcentration1[:, t], deltat * 1 / 2, deltar1, Lx,
+        SusChildrenInj, timeinjection = concentrationmovement(Boundaryconcentration1[:, t], deltat * 1 / 2, deltar1, Lx,
                                                   gamma1)
-        InfChildrenInj = concentrationmovement(Boundaryconcentration2[:, t], deltat * 1 / 2, deltar2, Lx,
+        InfChildrenInj,timeinjection = concentrationmovement(Boundaryconcentration2[:, t], deltat * 1 / 2, deltar2, Lx,
                                                  gamma2)
-        RecoveryChildrenInj = concentrationmovement(Boundaryconcentration3[:, t], deltat * 1 / 2, deltar3, Lx
+        RecoveryChildrenInj,timeinjection = concentrationmovement(Boundaryconcentration3[:, t], deltat * 1 / 2, deltar3, Lx
                                                     , gamma3)
         
 
@@ -149,10 +150,12 @@ def functionsimulation(ts):
         # Recovery of I
         InfPosition, RecoveryNew1 = dying(InfPosition, r2, deltat * 0.25, InfPosition)
         # Between S and I
-        SusPosition, InfChildrenReact, InfB = eatcompact(SusPosition, InfPosition, Lx, deltar1,
+        SusPosition, InfChildrenReact, InfB, internal_time = eatcompact(SusPosition, InfPosition, Lx, deltar1,deltar2,
                                                             Boundaryconcentration1[:, t],
                                                             Boundaryconcentration2[:, t], r1, sigma, deltat*0.5)
 
+
+        internal_reaction_total_time += internal_time
         # Recovery of Infected
         InfPosition, RecoveryNew2 = dying(InfPosition, r2, deltat * 0.25, InfB)
 
@@ -168,18 +171,20 @@ def functionsimulation(ts):
 
         # Reaction
         InfPosition, RecoveryNew1 = dying(InfPosition, r2, deltat * 0.25, InfPosition)
-        SusPosition, InfChildrenReact, InfB = eatcompact(SusPosition, InfPosition, Lx, deltar1,
+        SusPosition, InfChildrenReact, InfB,  internal_time = eatcompact(SusPosition, InfPosition, Lx, deltar1,deltar2,
                                                             Boundaryconcentration1[:, t],
                                                             Boundaryconcentration2[:, t], r1, sigma, deltat*0.5)
+
+        internal_reaction_total_time += internal_time
         InfPosition, RecoveryNew2 = dying(InfPosition, r2, deltat * 0.25, InfB)
 
         # Injection
-        SusChildrenInj = concentrationmovement(Boundaryconcentration1[:, t], deltat * 1 / 2, deltar1, Lx,
+        SusChildrenInj,timeinjection = concentrationmovement(Boundaryconcentration1[:, t], deltat * 1 / 2, deltar1, Lx,
                                                  gamma1)
         
-        InfChildrenInj = concentrationmovement(Boundaryconcentration2[:, t], deltat * 1 / 2, deltar2, Lx,
+        InfChildrenInj,timeinjection = concentrationmovement(Boundaryconcentration2[:, t], deltat * 1 / 2, deltar2, Lx,
                                                   gamma2)
-        RecoveryChildrenInj = concentrationmovement(Boundaryconcentration3[:, t], deltat * 1 / 2, deltar3, Lx,
+        RecoveryChildrenInj,timeinjection = concentrationmovement(Boundaryconcentration3[:, t], deltat * 1 / 2, deltar3, Lx,
                                                       gamma3)
 
         # Put them all together
@@ -193,32 +198,34 @@ def functionsimulation(ts):
             InfPositionHalfTime[k] = np.array(InfPosition)
             RecoveryPositionHalfTime[k] = np.array(RecoveryPosition)
             
-            np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/SIRSusExplicitB' + str(start) + 'time'
+            np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscaleFinal/SIRSusExplicitB' + str(start) + 'time'
                     +str(k)+'', SusPositionHalfTime[k])
-            np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/SIRInfExplicitB' + str(start) + 'time'
+            np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscaleFinal/SIRInfExplicitB' + str(start) + 'time'
                     +str(k)+'',
                     InfPositionHalfTime[k])
-            np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/SIRRecoveryExplicitB' + str(start) +'time'
+            np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscaleFinal/SIRRecoveryExplicitB' + str(start) +'time'
                     +str(k)+ '',
                     RecoveryPositionHalfTime[k])
             k += 1
             print(t)
     
     
-    return SusPositionHalfTime, InfPositionHalfTime, RecoveryPositionHalfTime
+    return SusPositionHalfTime, InfPositionHalfTime, RecoveryPositionHalfTime,internal_reaction_total_time
 #%%
 save_time=0.1
 
 # Call the function
-SusSimulation, InfSimulation,  RecoverySimulation= functionsimulation(save_time)
+SusSimulation, InfSimulation,  RecoverySimulation,internal_reaction_total_time= functionsimulation(save_time)
 
 
 print('Task number', start, 'is done')
 end_time=time.time()
 
 print('Task number', start, 'is done')
-# Calculate elapsed time
-elapsed_time = end_time - start_time
+
+
+elapsed_time = end_time - start_time-internal_reaction_total_time
+
 
 # Save the elapsed time as a .npy file
-np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/SIR_timeExplicitCutB'+str(start)+'.npy', elapsed_time)
+np.save('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscaleFinal/SIR_timeExplicitCutB'+str(start)+'.npy', elapsed_time)

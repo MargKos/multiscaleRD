@@ -92,17 +92,17 @@ def JSD(P, Q):
 
 # Preload all particle data into memory
 all_sus_files = [
-    np.load(f'/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/SIRSusImplicitB{s}time{time}.npy', allow_pickle=True)
+    np.load(f'/home/htc/bzfkostr/SCRATCH/SimulationsMultiscaleFinal/SIRSusImplicitB{s}time{time}.npy', allow_pickle=True)
     for s in range(500)
     for time in Times
 ]
 all_inf_files = [
-    np.load(f'/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/SIRInfImplicitB{s}time{time}.npy', allow_pickle=True)
+    np.load(f'/home/htc/bzfkostr/SCRATCH/SimulationsMultiscaleFinal/SIRInfImplicitB{s}time{time}.npy', allow_pickle=True)
     for s in range(500)
     for time in Times
 ]
 all_rec_files = [
-    np.load(f'/home/htc/bzfkostr/SCRATCH/SimulationsMultiscale/SIRRecoveryImplicitB{s}time{time}.npy', allow_pickle=True)
+    np.load(f'/home/htc/bzfkostr/SCRATCH/SimulationsMultiscaleFinal/SIRRecoveryImplicitB{s}time{time}.npy', allow_pickle=True)
     for s in range(500)
     for time in Times
 ]

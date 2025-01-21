@@ -3,7 +3,7 @@ import numpy as np
 from matplotlib.colors import ListedColormap, LinearSegmentedColormap
 
 
-'B Mauricio Parameters'
+'B Mauricio Parameters for paper  	https://doi.org/10.48550/arXiv.2404.07119 '
 def function1(x):
 	if 5.1<=x[0]<=6.1 and 1.5<=x[1]<=2.5:
 		ux=7000 

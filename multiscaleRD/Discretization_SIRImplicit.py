@@ -90,7 +90,7 @@ def functionAverage():
                     +str(t)+'.npy', allow_pickle=True)
             Recovery_s_t=np.load('/home/htc/bzfkostr/SCRATCH/SimulationsMultiscaleFinal/'+str('SIRRecoveryImplicitB')+str(s)+ 'time'
                     +str(t)+'.npy', allow_pickle=True)
-            
+          
             # Discretize Sus
             
             discrete_Sus_s_t=Discretization(a, l_coupling, Sus_s_t)
